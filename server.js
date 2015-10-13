@@ -6,9 +6,6 @@ var express    = require('express');
 var bodyParser = require('body-parser');
 var app        = express();
 
-// configure app
-// app.use(morgan('dev')); // log requests to the console
-
 // configure body parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -16,8 +13,15 @@ app.use(bodyParser.json());
 var port     = process.env.PORT || 8080; // set our port
 
 var mongoose   = require('mongoose');
+
 // mongoose.connect('mongodb://node:node@novus.modulusmongo.net:27017/Iganiq8o'); 	// connect to our database
-mongoose.connect('mongodb://testAcc:testing1@dbh84.mongolab.com:27847/nodejsdb');	// connect to our database
+mongoose.connect('mongodb://node:testing1@dbh84.mongolab.com:27847/nodejsdb');	// connect to our database
+// mongo dbh84.mongolab.com:27847/nodejsdb -u node -p testing1
+// mongodb://node:testing1@bh84.mongolab.com:27847/nodejsdb
+
+var conn = mongoose.connection;     // log any errors
+
+conn.on('error', console.error.bind(console, 'connection error:'));
 
 var Bear     = require('./app/models/bear');
 
@@ -57,6 +61,16 @@ router.route('/bears')
             res.json({ message: 'Bear created!' });
         });
         
+    })
+
+    // get all the bears (accessed at GET http://localhost:8080/api/bears)
+    .get(function(req, res) {
+        Bear.find(function(err, bears) {
+            if (err)
+                res.send(err);
+
+            res.json(bears);
+        });
     });
     
 
