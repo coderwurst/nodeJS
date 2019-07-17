@@ -1,4 +1,9 @@
 const fs = require('fs');
+const http = require('http');
+
+///////////////////////////////////
+// FILES
+///////////////////////////////////
 /*
 // Blocking -> synchronous way
 const avacato = fs.readFileSync('./txt/input.txt', 'utf-8');
@@ -10,6 +15,7 @@ console.log('file written!');
 */
 
 // Non-Blocking -> asynchronous way
+/*
 fs.readFile('txt/start.txt', 'utf-8', (error, data1) => {
     if (error) console.log(error);
     fs.readFile(`txt/${data1}.txt`, 'utf-8', (error, data2) => {
@@ -26,3 +32,15 @@ fs.readFile('txt/start.txt', 'utf-8', (error, data1) => {
     });
 });
 console.log('will read file');
+*/
+
+///////////////////////////////////
+// SERVER
+///////////////////////////////////
+const server = http.createServer((request, response) => {
+    response.end('Hello from the server!');
+});
+
+server.listen(8000, '127.0.0.1', () => {
+    console.log('server online_');
+});
