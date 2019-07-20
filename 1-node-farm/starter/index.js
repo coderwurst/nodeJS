@@ -39,20 +39,55 @@ console.log('will read file');
 // SERVER
 ///////////////////////////////////
 // top level code - only executed once, when server starts (here sync is not a bad thing)
+// load templates
+const templateOverview = fs.readFileSync(`${__dirname}/templates/template-overview.html`, 'utf-8');
+const templateCard = fs.readFileSync(`${__dirname}/templates/template-card.html`, 'utf-8');
+const templateProduct = fs.readFileSync(`${__dirname}/templates/template-product.html`, 'utf-8');
+// load data
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
 const dataObject = JSON.parse(data);
+
+function replaceTemplate(template, product) {
+    let output = template.replace(/{%PRODUCTNAME%}/g, product.productName);
+    output = output.replace(/{%IMAGE%}/g, product.image);
+    output = output.replace(/{%ORIGIN%}/g, product.origin);
+    output = output.replace(/{%NUTRIENTS%}/g, product.nutrients);
+    output = output.replace(/{%QUANTITY%}/g, product.quantity);
+    output = output.replace(/{%PRICE%}/g, product.price);
+    output = output.replace(/{%DESCRIPTION%}/g, product.description);
+    output = output.replace(/{%ID%}/g, product.id);
+
+    if(!product.organic) output = output.replace(/{%NOT_ORGANIC%}/g, 'not-organic');
+    
+    return output;
+}
 
 // exe each time a new request is sent
 const server = http.createServer((request, response) => {
     const pathName = request.url;
-    console.log(pathName);
+    // overview page
     if (pathName === '/' || pathName === '/overview') {
-        response.end('Welcome to the overview page');
+        // send template as html
+        response.writeHead(200, { 'Content-type': 'text/html' });
+
+        // load data from json into cards, as string - replacing placeholders
+        const cardsHTML = dataObject.map(currentElement => replaceTemplate(templateCard, currentElement)).join('');
+
+        // place cards html into overview html
+        const output = templateOverview.replace('{%PRODUCT_CARDS%}', cardsHTML);
+        response.end(output);
+
+    // product page
     } else if (pathName === '/product') {
-        response.end('Welcome to the product page');
+        response.writeHead(200, { 'Content-type': 'text/html' });
+        response.end(templateProduct);
+
+    // api
     } else if (pathName === '/api') {
         response.writeHead(200, { 'Content-type': 'text/json' });
         response.end(data);
+
+    // not found
     } else {
         response.writeHead(404, {
             'Content-type': 'text/html'
