@@ -38,6 +38,11 @@ console.log('will read file');
 ///////////////////////////////////
 // SERVER
 ///////////////////////////////////
+// top level code - only executed once, when server starts (here sync is not a bad thing)
+const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
+const dataObject = JSON.parse(data);
+
+// exe each time a new request is sent
 const server = http.createServer((request, response) => {
     const pathName = request.url;
     console.log(pathName);
@@ -45,6 +50,9 @@ const server = http.createServer((request, response) => {
         response.end('Welcome to the overview page');
     } else if (pathName === '/product') {
         response.end('Welcome to the product page');
+    } else if (pathName === '/api') {
+        response.writeHead(200, { 'Content-type': 'text/json' });
+        response.end(data);
     } else {
         response.writeHead(404, {
             'Content-type': 'text/html'
