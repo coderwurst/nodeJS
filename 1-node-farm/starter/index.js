@@ -50,7 +50,7 @@ const dataObject = JSON.parse(data);
 function replaceTemplate(template, product) {
     let output = template.replace(/{%PRODUCTNAME%}/g, product.productName);
     output = output.replace(/{%IMAGE%}/g, product.image);
-    output = output.replace(/{%ORIGIN%}/g, product.origin);
+    output = output.replace(/{%FROM%}/g, product.from);
     output = output.replace(/{%NUTRIENTS%}/g, product.nutrients);
     output = output.replace(/{%QUANTITY%}/g, product.quantity);
     output = output.replace(/{%PRICE%}/g, product.price);
@@ -64,9 +64,10 @@ function replaceTemplate(template, product) {
 
 // exe each time a new request is sent
 const server = http.createServer((request, response) => {
-    const pathName = request.url;
+    const { query, pathname } = url.parse(request.url, true);
+
     // overview page
-    if (pathName === '/' || pathName === '/overview') {
+    if (pathname === '/' || pathname === '/overview') {
         // send template as html
         response.writeHead(200, { 'Content-type': 'text/html' });
 
@@ -78,12 +79,14 @@ const server = http.createServer((request, response) => {
         response.end(output);
 
     // product page
-    } else if (pathName === '/product') {
+    } else if (pathname === '/product') {
         response.writeHead(200, { 'Content-type': 'text/html' });
-        response.end(templateProduct);
+        const product = dataObject[query.id];
+        const output = replaceTemplate(templateProduct, product);
+        response.end(output);
 
     // api
-    } else if (pathName === '/api') {
+    } else if (pathname === '/api') {
         response.writeHead(200, { 'Content-type': 'text/json' });
         response.end(data);
 
