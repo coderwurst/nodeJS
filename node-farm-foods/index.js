@@ -55,4 +55,5 @@ const server = http.createServer((request, response) => {
 
 server.listen(8000, '127.0.0.1', () => {
     console.log('server online_');
+    console.log('port: 8000');
 });
