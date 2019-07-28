@@ -19,6 +19,7 @@ const writeFilePro = (file, data) => {
     });
 }
 /*
+// then - catch to chain promises
 readFilePro(`${__dirname}/dog.txt`).then( data => {
         console.log('Breed: ' + data);
         return superagent
@@ -53,6 +54,7 @@ const getDogPic = async () => {
     return '3. return value for x';
 };
 
+// async function to retrieve value from promise
 (async () => {
     try {
         console.log('1. getDocPic');
@@ -64,6 +66,7 @@ const getDogPic = async () => {
 })();
 
 /*
+// then - catch to retrieve value from promise
 console.log('1. getDocPic');
 getDogPic().then(x => {
     console.log(x);
