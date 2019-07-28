@@ -39,18 +39,23 @@ readFilePro(`${__dirname}/dog.txt`).then( data => {
 const getDogPic = async () => {
     try {
         const data = await readFilePro(`${__dirname}/dog.txt`);     // code stops until this call has returned
-        console.log('Breed: ' + data);
-
+        console.log('2. breed: ' + data);
         const resolve = await superagent.get(
             `https://dog.ceo/api/breed/${data}/images/random`
         );
         console.log(resolve.body.message);
-
         const writeResolve = await writeFilePro('dog-img.txt', resolve.body.message);
         console.log(writeResolve);
     } catch (error) {
-        console.log(error.message);
+        console.log(error.message);         // here the promise is still fufilled
+        throw(error);                       // marks promise as rejected
     }
+    return '3. return value for x';
 };
-
-getDogPic();
+console.log('1. getDocPic');
+getDogPic().then(x => {
+    console.log(x);
+})
+.catch(error => {
+    console.log(error);
+});
