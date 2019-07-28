@@ -48,10 +48,22 @@ const getDogPic = async () => {
         console.log(writeResolve);
     } catch (error) {
         console.log(error.message);         // here the promise is still fufilled
-        throw(error);                       // marks promise as rejected
+        throw(error);                       // marks promise as rejected, to be caught in surrounding catch block
     }
     return '3. return value for x';
 };
+
+(async () => {
+    try {
+        console.log('1. getDocPic');
+        const x = await getDogPic();
+        console.log(x);
+    } catch (error) {
+        console.log(error);
+    }
+})();
+
+/*
 console.log('1. getDocPic');
 getDogPic().then(x => {
     console.log(x);
@@ -59,3 +71,5 @@ getDogPic().then(x => {
 .catch(error => {
     console.log(error);
 });
+*/
+
