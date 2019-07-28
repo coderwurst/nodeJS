@@ -1,14 +1,14 @@
 {
-  "name": "3-asynchronous-js",
+  "name": "async-js",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "coderwurst",
   "license": "ISC",
   "dependencies": {
-    "superagent": "^5.0.2"
+    "superagent": "^5.1.0"
   }
 }
